@@ -244,6 +244,7 @@ class Define:
                 pass
 
             C.__qualname__ = f'{id.capitalize()}Symbol'
+            C.__name__ = C.__qualname__
 
             s = C()
             s.id = id
@@ -616,6 +617,8 @@ def struct_std(self: Symbol):
 
     # Handle typedef aliases
     if Context.token.arity == 'name':
+        Context.scope.define(Context.token, self)
+        current_token.alias = Context.token
         Parse.advance()
 
     Parse.advance(';')

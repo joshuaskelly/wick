@@ -100,6 +100,24 @@ class_template = """class {name}:
 {read_method}
 """
 
+RepeatedChar = namedtuple('RepeatedChar', ['count', 'char'])
+
+
+def simplify_format_string(input):
+    if not input:
+        return ''
+
+    pairs = [RepeatedChar(1, input[0])]
+
+    for c in input[1:]:
+        repeat = pairs[-1]
+        if c == repeat.char and c != 's':
+            pairs[-1] = RepeatedChar(repeat.count + 1, repeat.char)
+        else:
+            pairs.append(RepeatedChar(1, c))
+
+    return ''.join(f'{p.count if p.count > 1 else ""}{p.char}' for p in pairs)
+
 
 def generate_source(d):
     result = ['import struct']
@@ -117,7 +135,7 @@ def generate_class_source(d):
     doc = indent(doc)
 
     # Class Attributes
-    class_format = "'<{}'".format(''.join([t[p.type].format for p in d.properties]))
+    class_format = "'<{}'".format(simplify_format_string(''.join([t[p.type].format for p in d.properties])))
     class_attrs = class_attributes_template.format(format=class_format)
     class_attrs = indent(class_attrs)
 
