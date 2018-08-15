@@ -570,6 +570,12 @@ def variable_std(self: Symbol):
         Context.scope.define(current_token, self)
         Parse.advance()
 
+        if Context.token.id == '[':
+            Parse.advance('[')
+            exp = Parse.expression(0)
+            Parse.advance(']')
+            current_token.dimension = exp
+
         if Context.token.id != ',':
             break
 
@@ -619,6 +625,7 @@ def struct_std(self: Symbol):
     if Context.token.arity == 'name':
         Context.scope.define(Context.token, self)
         current_token.alias = Context.token
+        Context.token.is_alias = True
         Parse.advance()
 
     Parse.advance(';')

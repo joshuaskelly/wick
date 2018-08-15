@@ -15,6 +15,13 @@ def dict_to_ns(d):
         properties=[Property(p['name'], p['type'], p['description']) for p in d['properties']]
     )
 
+def expand_type(symbol):
+    t = symbol.type.value
+
+    if hasattr(symbol, 'dimension'):
+        t = f'{t}[{symbol.dimension.value}]'
+
+    return t
 
 def program_to_ns(program):
     def get_comment(symbol):
@@ -56,11 +63,11 @@ def program_to_ns(program):
         return ''
 
     result = []
-    struct_symbols = [d for d in program.scope.definitions.values() if hasattr(d, 'type') and d.type.value == 'struct']
+    struct_symbols = [d for d in program.scope.definitions.values() if hasattr(d, 'type') and d.type.value == 'struct' and not hasattr(d, 'is_alias')]
 
     for struct_symbol in struct_symbols:
         variable_symbols = [d for d in struct_symbol.inner_scope.definitions.values() if d.arity == 'name']
-        properties = [Property(v.value, v.type.value, get_comment(v)) for v in variable_symbols]
+        properties = [Property(v.value, expand_type(v), get_comment(v)) for v in variable_symbols]
 
         ns = SimpleNamespace(
             name = struct_symbol.value,
