@@ -416,6 +416,28 @@ struct A {
         self.assertIsNotNone(symbol.dimension, 'Dimension should not be None')
         self.assertEqual(symbol.dimension.value, '32', 'Dimension should be "32"')
 
+    def test_typedef_alias_only(self):
+        source_text = """
+typedef struct {
+    char name[32];
+}A;"""
+        program = parse(source_text)
+
+        self.assertFalse(program.errors, 'Errors during parsing')
+
+        struct_symbol = self.get_symbol(program.scope, 'A')
+        self.assertEqual(struct_symbol.value, 'A', 'Value should be "A"')
+        self.assertEqual(struct_symbol.type.value, 'struct', 'Type should be "struct"')
+        self.assertIsNotNone(struct_symbol.inner_scope, 'Inner scope should not be None')
+        self.assertRangesEqual(struct_symbol.range, Range((3, 1), (3, 2)))
+
+        symbol = self.get_symbol(struct_symbol.inner_scope, 'name')
+        self.assertEqual(symbol.value, 'name', 'Value should be "name"')
+        self.assertEqual(symbol.type.value, 'char', 'Type should be "char"')
+        self.assertRangesEqual(symbol.range, Range((2, 9), (2, 13)))
+        self.assertIsNotNone(symbol.dimension, 'Dimension should not be None')
+        self.assertEqual(symbol.dimension.value, '32', 'Dimension should be "32"')
+
 
 if __name__ == '__main__':
     unittest.main()

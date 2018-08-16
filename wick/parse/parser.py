@@ -604,9 +604,12 @@ def struct_std(self: Symbol):
     """Struct statement denotation parse"""
 
     current_token = Context.token
-    Context.scope.define(current_token, self)
+    name_token = None
 
-    Parse.advance()
+    if current_token.arity == 'name':
+        Context.scope.define(current_token, self)
+        name_token = current_token
+        Parse.advance()
 
     if Context.token.id == ';':
         Parse.advance(';')
@@ -616,18 +619,24 @@ def struct_std(self: Symbol):
     Parse.advance('{')
 
     Scope()
-    current_token.inner_scope = Context.scope
     Parse.statements()
+    inner_scope = Context.scope
     Parse.advance('}')
     Context.scope.pop()
 
     # Handle typedef aliases
     if Context.token.arity == 'name':
         Context.scope.define(Context.token, self)
-        current_token.alias = Context.token
-        Context.token.is_alias = True
+
+        if name_token:
+            current_token.alias = Context.token
+            Context.token.is_alias = True
+        else:
+            name_token = Context.token
+
         Parse.advance()
 
+    name_token.inner_scope = inner_scope
     Parse.advance(';')
 
     return None

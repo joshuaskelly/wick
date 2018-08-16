@@ -43,9 +43,17 @@ def program_to_ns(program):
 
             return text
 
-        siblings = [s for s in symbol.scope.definitions.values() if s.arity == 'name' and s != symbol]
-        sibling_above = [s for s in siblings if s.range.end.line == symbol.range.start.line - 1]
-        sibling_above = sibling_above[0] if sibling_above else None
+        # Grab all symbols in current scope
+        symbols = [s for s in symbol.scope.definitions.values()]
+
+        # Grab symbols in the inner scope if the symbol is a struct
+        if hasattr(symbol, 'inner_scope') and symbol.type.value == 'struct':
+            symbols += [s for s in symbol.inner_scope.definitions.values()]
+
+        # Only consider name symbols
+        symbols = [s for s in symbols if s.arity == 'name' and s != symbol]
+
+        symbols_on_line_above = [s for s in symbols if s.range.end.line == symbol.range.start.line - 1]
 
         for comment in program.comments:
             # Comments are in line number order
@@ -54,7 +62,7 @@ def program_to_ns(program):
 
             # Prefer comments immediately above a symbol, unless there is
             # another symbol immediately above.
-            if comment.range.end.line == symbol.range.start.line - 1 and not sibling_above:
+            if comment.range.end.line == symbol.range.start.line - 1 and not symbols_on_line_above:
                 return sanitize_comment(comment.value)
 
             # Also consider comments on the same line as the symbol
