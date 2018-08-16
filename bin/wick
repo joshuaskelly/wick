@@ -3,14 +3,14 @@
 """Wick
 
 Usage:
-    wick <source>
+    wick <source> [--language=<lang>]
     wick -h | --help
     wick --version
 
 Options:
-    -h --help   Show this screen.
-    --version   Show version.
-
+    -h --help          Show this screen.
+    --version          Show version.
+    --language=<lang>  Desired source code language [default: python]
 """
 
 import os
@@ -23,8 +23,9 @@ import wick
 if __name__ == '__main__':
     arguments = docopt(__doc__, version=f'wick {wick.__version__}')
     source_file = os.path.abspath(os.path.expanduser(arguments['<source>']))
+    language = arguments['--language']
 
     with open(source_file) as file:
-        wick.generate(file.read())
+        wick.generate(file.read(), language)
 
     sys.exit(0)

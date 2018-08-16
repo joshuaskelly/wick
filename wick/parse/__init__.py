@@ -37,8 +37,9 @@ def program_to_ns(program):
                 lines = [line.lstrip(' *') for line in lines]
                 text = '\n'.join(lines)
 
-            # Clean up leading whitespace
+            # Clean up whitespace
             text = text.lstrip()
+            text = text.rstrip()
 
             return text
 

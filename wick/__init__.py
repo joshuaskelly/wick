@@ -4,6 +4,6 @@ from . import generators
 from . import parse
 
 
-def generate(source, language='python'):
+def generate(source, language='markdown'):
     generator = generators.factory(language)
     print(generator.generate(parse.parse(source)))
