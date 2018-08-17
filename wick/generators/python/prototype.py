@@ -189,59 +189,59 @@ def get_constructor_assignment_exprs(d) -> str:
     return '\n'.join(result)
 
 
-def generate_source(structs):
+def generate_source(parse_tree):
     result = ['import struct']
-    for class_source in structs:
-        source = generate_class_source(class_source)
+    for struct in parse_tree.structs:
+        source = generate_class_source(struct)
         result.append(source)
 
     return '\n\n'.join(result)
 
 
-def generate_class_source(d):
-    d.properties = expand_properties(d.properties)
+def generate_class_source(struct):
+    properties = expand_properties(struct.properties)
 
     # Docstring
-    doc_attrs = '\n\n'.join([docstring_attributes_template.format(name=p.name, description=p.description) for p in d.properties])
-    doc = docstring_template.format(description=d.description, attributes=doc_attrs)
+    doc_attrs = '\n\n'.join([docstring_attributes_template.format(name=p.name, description=p.description) for p in properties])
+    doc = docstring_template.format(description=struct.description, attributes=doc_attrs)
     doc = indent(doc)
 
     # Class Attributes
-    class_format = "'<{}'".format(get_format(d.properties))
+    class_format = "'<{}'".format(get_format(properties))
     class_attrs = class_attributes_template.format(format=class_format)
     class_attrs = indent(class_attrs)
 
     # Slots
-    slot_attrs = '\n'.join([f"'{p.name}'," for p in d.properties])
+    slot_attrs = '\n'.join([f"'{p.name}'," for p in properties])
     slot_attrs = indent(slot_attrs[:-1])
     slots = indent(slots_template.format(attributes=slot_attrs))
 
     # Constructor
-    constructor_args = ',\n'.join([p.name for p in d.properties])
+    constructor_args = ',\n'.join([p.name for p in properties])
     constructor_args = indent(constructor_args, tab=' ' * 13)
-    assignment_exprs = get_constructor_assignment_exprs(d)
+    assignment_exprs = get_constructor_assignment_exprs(struct)
     assignment_exprs = indent(assignment_exprs)
     constructor = constructor_template.format(constructor_args=constructor_args, assignment_exprs=assignment_exprs)
     constructor = indent(constructor)
 
     # Write methods
-    pack_args = get_pack_args(d)
+    pack_args = get_pack_args(struct)
     pack_args = pack_args[:-1]
-    indent_amount = len(snake_case(d.name)) + 20
+    indent_amount = len(snake_case(struct.name)) + 20
     pack_args = indent(pack_args, tab=' ' * indent_amount)
-    pack = pack_template.format(name=snake_case(d.name), args=pack_args)
+    pack = pack_template.format(name=snake_case(struct.name), args=pack_args)
     pack = indent(pack)
-    write = write_data_template.format(name=snake_case(d.name))
+    write = write_data_template.format(name=snake_case(struct.name))
     write = indent(write)
-    write_method = write_template.format(name=snake_case(d.name), data=pack, write=write)
+    write_method = write_template.format(name=snake_case(struct.name), data=pack, write=write)
     write_method = indent(write_method)
 
     # Read methods
-    read_method = read_template.format(class_name=d.name, name=snake_case(d.name))
+    read_method = read_template.format(class_name=struct.name, name=snake_case(struct.name))
     read_method = indent(read_method)
 
     class_source = class_template.format(
-        name=d.name,
+        name=struct.name,
         docstring=doc,
         class_attributes=class_attrs,
         slots=slots,
