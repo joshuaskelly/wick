@@ -85,7 +85,7 @@ class Record:
         record_data = file.read(cls.size)
         record_struct = struct.unpack(cls.format, record_data)
     
-        return record(*record_struct)
+        return Record(*record_struct)
 ```
 
 Then we can import this code into Python and _do work_.
