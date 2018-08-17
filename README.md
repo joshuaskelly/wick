@@ -111,3 +111,8 @@ import struct
 with open(path, 'rb') as file:
     recs = [Record(*chunk) for chunk in struct.iter_unpack(Record.format, file.read())]
 ```
+
+## License
+MIT
+
+See the [license](./LICENSE) document for the full text.
