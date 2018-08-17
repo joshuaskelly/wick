@@ -20,7 +20,7 @@ $ wick common.h --language=python
 
 ## What _exactly_ does it do?
 
-Lets say we have binary data that is a sequence of records that are composed of a string name and an integer id. We can create a simple C struct represenation of this data in record.h.
+Lets say we have binary data that is a sequence of records that are represented by a string name and an integer id. We can create a simple C struct represenation of this data in record.h.
 
 ```C
 // record.h
