@@ -20,7 +20,10 @@ from docopt import docopt
 
 import wick
 
-if __name__ == '__main__':
+
+def main():
+    """Main CLI entrypoint"""
+
     arguments = docopt(__doc__, version=f'wick {wick.__version__}')
     source_file = os.path.abspath(os.path.expanduser(arguments['<source>']))
     language = arguments['--language']
@@ -30,3 +33,7 @@ if __name__ == '__main__':
         print(result)
 
     sys.exit(0)
+
+
+if __name__ == '__main__':
+    main()
