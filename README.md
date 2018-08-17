@@ -107,7 +107,7 @@ with open(path, 'wb') as file:
 ```python
 import struct
 
-# Assuming the file only contains Record objects
+# Assuming the file only contains Record data
 with open(path, 'rb') as file:
     recs = [Record(*chunk) for chunk in struct.iter_unpack(Record.format, file.read())]
 ```
