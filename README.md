@@ -118,7 +118,7 @@ Have a bug fix or a new feature you'd like to see in wick? Send it our way! Plea
 1. Fork this repo!
 2. Create your feature branch: `git checkout -b features/add-javascript-code-generator`
 3. Commit your changes: `git commit -m 'Implemented Javascript code generator'`
-4. Push to the branch: `git push origin add-javascript-code-generator`
+4. Push the branch: `git push origin add-javascript-code-generator`
 5. Submit a pull request.
 6. Create an [issue](https://github.com/joshuaskelly/wick/issues/new).
 
