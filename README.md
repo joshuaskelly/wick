@@ -1,3 +1,5 @@
+# [![wick](.media/logo.svg)](https://github.com/JoshuaSkelly/wick)
+
 # wick
 
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)]()
