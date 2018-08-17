@@ -20,7 +20,7 @@ class Context:
 
 
 Diagnostic = namedtuple('Diagnostic', ['range', 'severity', 'message'])
-Program = namedtuple('Program', ['ast', 'scope', 'symbols', 'errors', 'comments'])
+ParseTree = namedtuple('ParseTree', ['ast', 'scope', 'symbols', 'errors', 'comments'])
 
 
 class Object:
@@ -40,7 +40,7 @@ class Symbol:
         self.range = Range((-1, -1), (-1, -1))
 
     def nud(self) -> 'Symbol':
-        """Null denotation parse.
+        """Null denotation parser.
 
         Does not care about symbols to the left. Used for parsing literals
         variables and prefix operators.
@@ -49,7 +49,7 @@ class Symbol:
         self.error('Undefined')
 
     def led(self, left: 'Symbol') -> 'Symbol':
-        """Left denotation parse.
+        """Left denotation parser.
 
         Used for parsing infix and suffix operators.
 
@@ -376,7 +376,7 @@ class Define:
         Args:
             id: Symbol id
 
-            std: Statement denotation parse
+            std: Statement denotation parser
         """
 
         symbol = Define.symbol(id)
@@ -555,7 +555,7 @@ s.nud = MethodType(itself, s)
 
 
 def variable_std(self: Symbol):
-    """Variable declaration statement denotation parse."""
+    """Variable declaration statement denotation parser."""
 
     while True:
         # Ignore variables defined outside of a struct
@@ -601,7 +601,7 @@ Define.statement('double', variable_std)
 
 
 def struct_std(self: Symbol):
-    """Struct statement denotation parse"""
+    """Struct statement denotation parser"""
 
     current_token = Context.token
     name_token = None
@@ -645,11 +645,11 @@ def struct_std(self: Symbol):
 Define.statement('struct', struct_std)
 
 
-def parse(source_text: str) -> Program:
+def parse(source_text: str) -> ParseTree:
     """Parses the given source text.
 
     Returns:
-        A Program
+        A ParseTree
     """
 
     global lexer
@@ -665,4 +665,4 @@ def parse(source_text: str) -> Program:
     ast = Parse.statements()
     scope = Context.scope
 
-    return Program(ast, scope, Context.symbols, Context.errors, Context.comments)
+    return ParseTree(ast, scope, Context.symbols, Context.errors, Context.comments)

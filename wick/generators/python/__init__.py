@@ -1,5 +1,5 @@
 from . import prototype
 
 
-def generate(structs):
-    return prototype.generate_source(structs)
+def generate(parse_tree):
+    return prototype.generate_source(parse_tree)

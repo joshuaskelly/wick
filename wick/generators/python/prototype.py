@@ -188,6 +188,7 @@ def get_constructor_assignment_exprs(d) -> str:
 
     return '\n'.join(result)
 
+
 def generate_source(structs):
     result = ['import struct']
     for class_source in structs:

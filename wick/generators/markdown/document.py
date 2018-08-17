@@ -1,3 +1,5 @@
+import os
+
 from . import common
 from . import elements
 
@@ -53,11 +55,17 @@ def generate_section(s):
     return doc
 
 
-def generate_source(structs):
+def generate_source(parse_tree):
     doc = Document()
 
-    for s in structs:
-        doc.add(generate_section(s))
+    if parse_tree.uri:
+        filename = os.path.basename(parse_tree.uri)
+        filename = filename.split('.')[0].capitalize()
+        doc.add(elements.H1(filename))
+        doc.add(elements.BlankLine())
+
+    for struct in parse_tree.structs:
+        doc.add(generate_section(struct))
         doc.add(elements.BlankLine())
 
     result = str(doc)

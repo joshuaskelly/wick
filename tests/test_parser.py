@@ -1,7 +1,7 @@
 import unittest
 
-from wick.parse.common import Range
-from wick.parse.parser import parse
+from wick.parser.common import Range
+from wick.parser.parser import parse
 
 
 class TestParser(unittest.TestCase):
@@ -27,11 +27,11 @@ class TestParser(unittest.TestCase):
 
     def test_empty_struct(self):
         source_text = 'struct empty;'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'empty')
+        symbol = self.get_symbol(parse_tree.scope, 'empty')
 
         self.assertEqual(symbol.value, 'empty', 'Value should be "empty"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
@@ -40,11 +40,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_char_member(self):
         source_text = 'struct single { char x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -56,11 +56,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_unsigned_char_member(self):
         source_text = 'struct single { unsigned char x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -72,11 +72,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_bool_member(self):
         source_text = 'struct single { bool x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -88,11 +88,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_short_member(self):
         source_text = 'struct single { short x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -104,11 +104,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_unsigned_short_member(self):
         source_text = 'struct single { unsigned short x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -120,11 +120,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_int_member(self):
         source_text = 'struct single { int x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -136,11 +136,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_unsigned_int_member(self):
         source_text = 'struct single { unsigned int x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -152,11 +152,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_long_long_member(self):
         source_text = 'struct single { long long x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -168,11 +168,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_unsigned_long_long_member(self):
         source_text = 'struct single { unsigned long long x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -184,11 +184,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_long_member(self):
         source_text = 'struct single { long x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -200,11 +200,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_unsigned_long_member(self):
         source_text = 'struct single { unsigned long x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -216,11 +216,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_float_member(self):
         source_text = 'struct single { float x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -232,11 +232,11 @@ class TestParser(unittest.TestCase):
 
     def test_single_double_member(self):
         source_text = 'struct single { double x; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        symbol = self.get_symbol(program.scope, 'single')
+        symbol = self.get_symbol(parse_tree.scope, 'single')
         self.assertEqual(symbol.value, 'single', 'Value should be "single"')
         self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
@@ -248,11 +248,11 @@ class TestParser(unittest.TestCase):
 
     def test_multiple_char_members(self):
         source_text = 'struct multi { char x; char y; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        struct_symbol = self.get_symbol(program.scope, 'multi')
+        struct_symbol = self.get_symbol(parse_tree.scope, 'multi')
         self.assertEqual(struct_symbol.value, 'multi', 'Value should be "multi"')
         self.assertEqual(struct_symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(struct_symbol.inner_scope, 'Inner scope should not be None')
@@ -269,11 +269,11 @@ class TestParser(unittest.TestCase):
 
     def test_multiple_comma_separated_char_members(self):
         source_text = 'struct multi { char x, y; };'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        struct_symbol = self.get_symbol(program.scope, 'multi')
+        struct_symbol = self.get_symbol(parse_tree.scope, 'multi')
         self.assertEqual(struct_symbol.value, 'multi', 'Value should be "multi"')
         self.assertEqual(struct_symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(struct_symbol.inner_scope, 'Inner scope should not be None')
@@ -290,11 +290,11 @@ class TestParser(unittest.TestCase):
 
     def test_typedef_struct(self):
         source_text = 'typedef struct td { char x; char y; }alias;'
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        struct_symbol = self.get_symbol(program.scope, 'td')
+        struct_symbol = self.get_symbol(parse_tree.scope, 'td')
         self.assertEqual(struct_symbol.value, 'td', 'Value should be "td"')
         self.assertEqual(struct_symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(struct_symbol.inner_scope, 'Inner scope should not be None')
@@ -323,11 +323,11 @@ struct B {
     long b;
 };
 """
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        struct_symbol = self.get_symbol(program.scope, 'A')
+        struct_symbol = self.get_symbol(parse_tree.scope, 'A')
         self.assertEqual(struct_symbol.value, 'A', 'Value should be "A"')
         self.assertEqual(struct_symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(struct_symbol.inner_scope, 'Inner scope should not be None')
@@ -338,7 +338,7 @@ struct B {
         self.assertEqual(symbol.type.value, 'int', 'Type should be "int"')
         self.assertRangesEqual(symbol.range, Range((2, 8), (2, 9)))
 
-        struct_symbol = self.get_symbol(program.scope, 'B')
+        struct_symbol = self.get_symbol(parse_tree.scope, 'B')
         self.assertEqual(struct_symbol.value, 'B', 'Value should be "B"')
         self.assertEqual(struct_symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(struct_symbol.inner_scope, 'Inner scope should not be None')
@@ -362,11 +362,11 @@ struct A {
 };
 """
 
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        struct_symbol = self.get_symbol(program.scope, 'A')
+        struct_symbol = self.get_symbol(parse_tree.scope, 'A')
         self.assertEqual(struct_symbol.value, 'A', 'Value should be "A"')
         self.assertEqual(struct_symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(struct_symbol.inner_scope, 'Inner scope should not be None')
@@ -382,15 +382,15 @@ struct A {
         self.assertEqual(symbol.type.value, 'char', 'Type should be "char"')
         self.assertRangesEqual(symbol.range, Range((8, 9), (8, 10)))
 
-        comment = program.comments[0]
+        comment = parse_tree.comments[0]
         self.assertEqual(comment.value, '/* Description of A */', 'Comment text should not change')
         self.assertRangesEqual(comment.range, Range((1, 0), (1, 22)))
 
-        comment = program.comments[1]
+        comment = parse_tree.comments[1]
         self.assertEqual(comment.value, '// Description of a', 'Comment text should not change')
         self.assertRangesEqual(comment.range, Range((3, 4), (3, 23)))
 
-        comment = program.comments[2]
+        comment = parse_tree.comments[2]
         self.assertEqual(comment.value, '// This is a description\n    // of b. It is two lines')
         self.assertRangesEqual(comment.range, Range((6, 4), (7, 28)))
 
@@ -399,11 +399,11 @@ struct A {
 struct A {
     char name[32];
 };"""
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        struct_symbol = self.get_symbol(program.scope, 'A')
+        struct_symbol = self.get_symbol(parse_tree.scope, 'A')
         self.assertEqual(struct_symbol.value, 'A', 'Value should be "A"')
         self.assertEqual(struct_symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(struct_symbol.inner_scope, 'Inner scope should not be None')
@@ -421,11 +421,11 @@ struct A {
 typedef struct {
     char name[32];
 }A;"""
-        program = parse(source_text)
+        parse_tree = parse(source_text)
 
-        self.assertFalse(program.errors, 'Errors during parsing')
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
 
-        struct_symbol = self.get_symbol(program.scope, 'A')
+        struct_symbol = self.get_symbol(parse_tree.scope, 'A')
         self.assertEqual(struct_symbol.value, 'A', 'Value should be "A"')
         self.assertEqual(struct_symbol.type.value, 'struct', 'Type should be "struct"')
         self.assertIsNotNone(struct_symbol.inner_scope, 'Inner scope should not be None')

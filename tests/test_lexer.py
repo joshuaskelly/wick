@@ -1,6 +1,6 @@
 import unittest
 
-from wick.parse.lexer import Lexer, LexError, new_lexer
+from wick.parser.lexer import Lexer, LexError, new_lexer
 
 
 class TestLexer(unittest.TestCase):

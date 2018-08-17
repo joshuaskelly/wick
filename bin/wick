@@ -26,6 +26,7 @@ if __name__ == '__main__':
     language = arguments['--language']
 
     with open(source_file) as file:
-        wick.generate(file.read(), language)
+        result = wick.generate(file.read(), uri=source_file, language=language)
+        print(result)
 
     sys.exit(0)

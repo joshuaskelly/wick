@@ -1,9 +1,10 @@
 __version__ = '0.0.1'
 
 from . import generators
-from . import parse
+from . import parser
 
 
-def generate(source, language='markdown'):
+def generate(source, uri='', language='python'):
     generator = generators.factory(language)
-    print(generator.generate(parse.parse(source)))
+
+    return generator.generate(parser.parse(uri, source))
