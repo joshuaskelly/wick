@@ -4,7 +4,7 @@
 
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)]()
 
-wick is a Python command line tool that generates File IO source code for working with binary data.
+wick is a Python command line tool that generates file I/O source code for working with binary data.
 
 ## Installation
 
