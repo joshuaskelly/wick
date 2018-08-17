@@ -20,7 +20,7 @@ $ wick common.h --language=python
 
 ## What _exactly_ does it do?
 
-Lets walk through a concrete example.
+Let's walk through a concrete example.
 
 Say we have binary data that is a sequence of records that are represented by a string name and an integer id. We can write a simple C struct representation of this data.
 
