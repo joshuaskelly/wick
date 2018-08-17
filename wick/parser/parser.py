@@ -384,6 +384,19 @@ class Define:
 
         return symbol
 
+    @staticmethod
+    def structure(id: str, srd: Callable[[], Symbol]) -> MaybeSymbol:
+        """Defines a structure
+
+        Args:
+            id: Symbol id
+
+            srd: Structure denotation parser
+        """
+
+        symbol = Define.symbol(id)
+        symbol.srd = MethodType(srd, symbol)
+
 
 class Parse:
     """Namespace for parsing language constructs"""
@@ -499,10 +512,9 @@ class Parse:
 
             return current_token.std()
 
-        expression = Parse.expression(0)
-
-        if not expression:
-            current_token.error('Bad expression statement.')
+        else:
+            current_token.error(f'Unexpected symbol: {current_token.value}')
+            Parse.advance()
 
         return None
 
@@ -525,6 +537,47 @@ class Parse:
                 parsed_statements.append(statement)
 
         return parsed_statements
+
+    @staticmethod
+    def structure() -> MaybeSymbol:
+        """Parses a structure.
+
+        Returns:
+            A Symbol
+        """
+        current_token = Context.token
+
+        if hasattr(current_token, 'srd'):
+            Parse.advance()
+            Context.scope.reserve(current_token)
+
+            return current_token.srd()
+
+        else:
+            current_token.error(f'Unexpected symbol: {current_token.value}')
+            Parse.advance()
+
+        return None
+
+    @staticmethod
+    def structures() -> List[Symbol]:
+        """Parses a sequence of structures.
+
+        Returns:
+            Symbol
+        """
+        parsed_structures = []
+
+        while True:
+            if Context.token.id == '}' or Context.token.id == '(end)':
+                break
+
+            structure = Parse.structure()
+
+            if structure:
+                parsed_structures.append(structure)
+
+        return parsed_structures
 
     @staticmethod
     def block() -> Symbol:
@@ -600,7 +653,7 @@ Define.statement('float', variable_std)
 Define.statement('double', variable_std)
 
 
-def struct_std(self: Symbol):
+def struct_srd(self: Symbol):
     """Struct statement denotation parser"""
 
     current_token = Context.token
@@ -642,7 +695,14 @@ def struct_std(self: Symbol):
     return None
 
 
-Define.statement('struct', struct_std)
+Define.structure('struct', struct_srd)
+
+
+def typedef_srd(self: Symbol):
+    return Parse.structure()
+
+
+Define.structure('typedef', typedef_srd)
 
 
 def parse(source_text: str) -> ParseTree:
@@ -662,7 +722,7 @@ def parse(source_text: str) -> ParseTree:
     Context.scope = Scope()
 
     Parse.advance()
-    ast = Parse.statements()
+    ast = Parse.structures()
     scope = Context.scope
 
     return ParseTree(ast, scope, Context.symbols, Context.errors, Context.comments)

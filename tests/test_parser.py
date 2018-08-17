@@ -438,6 +438,12 @@ typedef struct {
         self.assertIsNotNone(symbol.dimension, 'Dimension should not be None')
         self.assertEqual(symbol.dimension.value, '32', 'Dimension should be "32"')
 
+    def test_dont_parse_variable_declarations_outside_a_struct(self):
+        source_text = """float d;"""
+        parse_tree = parse(source_text)
+
+        self.assertEqual(len(parse_tree.errors), 3, 'Three errors should be present')
+
 
 if __name__ == '__main__':
     unittest.main()
