@@ -99,7 +99,7 @@ with open(path, 'rb') as file:
 ### Write Data
 ```python
 with open(path, 'wb') as file:
-    rec = Record('name', 0)
+    rec = Record(b'name', 0)
     Record.write(file, rec)
 ```
 
