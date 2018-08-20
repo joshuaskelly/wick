@@ -1,6 +1,6 @@
 class MarkDownElement:
-    def __init__(self, t=''):
-        self._text = t
+    def __init__(self, text=''):
+        self._text = text
 
     def __str__(self):
         return self.text
@@ -42,7 +42,8 @@ class PlainText(MarkDownElement):
 
 
 class BlankLine(MarkDownElement):
-    pass
+    def __str__(self):
+        return ''
 
 
 class Table(MarkDownElement):

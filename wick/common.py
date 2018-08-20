@@ -1,3 +1,4 @@
+import os
 import re
 
 from collections import namedtuple
@@ -100,6 +101,7 @@ class Program:
             parse_tree: The ParseTree object to process
         """
         self.uri = uri
+        self.name = os.path.basename(uri).split('.')[0]
         self.structs = []
 
         # Only consider symbols that are structs and not struct aliases

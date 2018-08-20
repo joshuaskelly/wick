@@ -1,14 +1,23 @@
+from collections import namedtuple
 from . import document
 
 
-def generate(parse_tree):
+Generator = namedtuple('Generator', ['generate'])
+
+
+def get_generator(language):
+    if language.lower() == 'markdown':
+        return Generator(generate=generate)
+
+
+def generate(program):
     """Generate Markdown text
 
     Args:
-        parse_tree: A ParseTree object to generate text for
+        program: A Program object to generate text for
 
     Returns:
         The Markdown text
     """
 
-    return document.generate_source(parse_tree)
+    return document.generate_source(program)

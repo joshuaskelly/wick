@@ -1,19 +1,25 @@
 from . import python
 from . import markdown
 
+_language_modules = [
+    markdown,
+    python
+]
 
-def factory(language):
-    """Get a generator for the given language
 
-    Args:
-        language: A language name
+class factory:
+    def get(language):
+        """Get a generator for the given language
 
-    Returns:
-        A Python module
-    """
+        Args:
+            language: A language name
 
-    if language.lower() == 'python':
-        return python
+        Returns:
+            A Python module
+        """
 
-    if language.lower() == 'markdown':
-        return markdown
+        for module in _language_modules:
+            generator = module.get_generator(language)
+
+            if generator:
+                return generator

@@ -19,6 +19,6 @@ def generate(source, uri='', language='python'):
         The generated source text
     """
 
-    generator = generators.factory(language)
+    generator = generators.factory.get(language)
 
     return generator.generate(parser.parse(uri, source))

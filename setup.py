@@ -11,6 +11,7 @@ setup(
     author_email='joshua.skelton@gmail.com',
     license='MIT',
     packages=find_packages(exclude=['docs', 'tests*']),
+    include_package_data=True,
     entry_points={
         'console_scripts': [
             'wick=wick.cli:main',
