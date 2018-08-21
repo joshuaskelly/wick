@@ -12,7 +12,7 @@ class Test{{ program.name|capitalize }}ReadWrite(unittest.TestCase):
     def test_{{ struct.name|snakecase }}(self):
         {%- for property in struct.members %}
         {{ property.name }} = {% for expanded_property in property.unpack -%}
-        0{{ ", " if not loop.last -}}
+        {{ property|testdata }}{{ ", " if not loop.last -}}
         {% endfor %}
         {%- endfor %}
 

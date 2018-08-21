@@ -30,6 +30,7 @@ def _get_size(symbol):
         'char': 'c',
         'signed char': 'b',
         'unsigned char': 'B',
+        'short': 'h',
         'unsigned short': 'H',
         'int': 'i',
         'unsigned int': 'I',

@@ -1,3 +1,4 @@
+import math
 import re
 
 from collections import namedtuple
@@ -41,6 +42,7 @@ def format_string(members):
                 'char': 'c',
                 'signed char': 'b',
                 'unsigned char': 'B',
+                'short': 'h',
                 'unsigned short': 'H',
                 'int': 'i',
                 'unsigned int': 'I',
@@ -76,3 +78,50 @@ def simplify_format_string(input):
             pairs.append(RepeatedChar(1, c))
 
     return ''.join(f'{p.count if p.count > 1 else ""}{p.char}' for p in pairs)
+
+
+value_generators = {}
+
+
+def test_data(member):
+    global value_generators
+
+    if member.type == 'char' and member.length > 1:
+        test_characters = bytes(range(32, 127)).decode("ascii")
+        count = math.ceil(member.length / len(test_characters))
+        test_characters = test_characters * count
+        return f'"""{test_characters[:member.length]}"""'
+
+    try:
+        value_generator = value_generators.get(member.type)
+
+        return next(value_generator)
+
+    except TypeError:
+        interesting_values = {
+            'char': [bytes([i]) for i in range(128)],
+            'signed char': [-128, 0, 127],
+            'unsigned char': [0, 255],
+            'short': [-32768, 0, 32767],
+            'unsigned short': [0, 65535],
+            'int': [-2147483648, 0, 2147483647],
+            'unsigned int': [0, 4294967295],
+            'long': [-2147483648, 0, 2147483647],
+            'unsigned long': [0, 4294967295],
+            'long long': [-9223372036854775808, 0, 9223372036854775807],
+            'unsigned long long': [0, 18446744073709551615],
+            'ssize_t': [0],
+            'size_t': [0],
+            'float': [-1.0, 0.0, 1.0],
+            'double': [-1.0, 0.0, 1.0]
+        }[member.type]
+
+        def value_generator():
+            i = 0
+            while True:
+                yield interesting_values[i]
+                i = (i + 1) % len(interesting_values)
+
+        value_generators[member.type] = value_generator()
+
+        return next(value_generators[member.type])

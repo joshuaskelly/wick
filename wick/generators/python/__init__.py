@@ -37,6 +37,7 @@ def get_generator_for_template(template_name):
         env.filters['spaces'] = filters.spaces
         env.filters['snakecase'] = filters.snake_case
         env.filters['pascalcase'] = filters.pascal_case
+        env.filters['testdata'] = filters.test_data
 
         template = env.get_template(template_name)
 

@@ -15,6 +15,9 @@ def generate(source, uri='', language='python', template=None):
 
         language: The desired language to generate code for.
 
+        template: The template to use for code generation. If provided the
+            language argument will be ignored.
+
     Returns:
         The generated source text
     """
