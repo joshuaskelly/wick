@@ -9,7 +9,8 @@ uninstall:
 reinstall: uninstall install
 
 publish:
-	python setup.py sdist upload
+	python setup.py sdist
+	twine upload dist/*
 
 test:
 	python -m unittest discover -s tests
