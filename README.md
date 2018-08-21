@@ -22,7 +22,7 @@ $ wick common.h --language=python
 
 Let's walk through a concrete example.
 
-Say we have binary data that is a sequence of records that are represented by a string name and an integer id. We can write a simple C struct representation of this data.
+Say we have binary data that is a sequence of records that are represented by a string name and an integer id. First we write a simple C struct representation of this data.
 
 ```C
 // record.h
