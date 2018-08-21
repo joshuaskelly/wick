@@ -4,8 +4,7 @@ from wick import __version__
 setup(
     name='wick',
     version=__version__,
-    description='',
-    long_description='',
+    long_description=open('README.md').read(),
     url='https://github.com/JoshuaSkelly/wick',
     author='Joshua Skelton',
     author_email='joshua.skelton@gmail.com',
