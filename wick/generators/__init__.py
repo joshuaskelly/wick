@@ -1,5 +1,6 @@
 from . import python
 from . import markdown
+from . import template
 
 _language_modules = [
     markdown,
@@ -8,7 +9,8 @@ _language_modules = [
 
 
 class factory:
-    def get(language):
+    @staticmethod
+    def from_language(language):
         """Get a generator for the given language
 
         Args:
@@ -23,3 +25,7 @@ class factory:
 
             if generator:
                 return generator
+
+    @staticmethod
+    def from_template(template_string):
+        return template.get_generator(template_string)

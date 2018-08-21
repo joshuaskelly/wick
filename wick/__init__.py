@@ -4,7 +4,7 @@ from . import generators
 from . import parser
 
 
-def generate(source, uri='', language='python'):
+def generate(source, uri='', language='python', template=None):
     """For the given C struct source code, generate source code to read and
     write that data in the given languge.
 
@@ -19,6 +19,10 @@ def generate(source, uri='', language='python'):
         The generated source text
     """
 
-    generator = generators.factory.get(language)
+    if template:
+        generator = generators.factory.from_template(template)
+
+    else:
+        generator = generators.factory.from_language(language)
 
     return generator.generate(parser.parse(uri, source))
