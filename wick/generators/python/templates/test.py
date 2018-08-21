@@ -11,12 +11,14 @@ class Test{{ program.name|capitalize }}ReadWrite(unittest.TestCase):
     {% for struct in program.structs %}
     def test_{{ struct.name|snakecase }}(self):
         {%- for property in struct.properties %}
-        {{ property.name }} = 0
+        {{ property.name }} = {% for expanded_property in property.unpack -%}
+        0{{ ", " if not loop.last -}}
+        {% endfor %}
         {%- endfor %}
 
         expected = {{ program.name|snakecase }}.{{ struct.name }}(
         {%- for property in struct.properties %}
-            {{ property.name }}{{ "," if not loop.last -}}
+            {{'*' if property.length > 1 and property.type != 'char'}}{{ property.name }}{{ "," if not loop.last -}}
         {% endfor %}
         )
 
@@ -26,7 +28,11 @@ class Test{{ program.name|capitalize }}ReadWrite(unittest.TestCase):
 
         actual = {{ program.name|snakecase }}.{{ struct.name }}.read(self.buff)
 
+
         {% for property in struct.properties -%}
         self.assertEqual(expected.{{ property.name }}, actual.{{ property.name }}, '{{ property.name|capitalize }} values should be equal')
         {% endfor %}
+        self.assertEqual(self.buff.read(), b'', 'Buffer should be fully consumed')
     {% endfor %}
+if __name__ == '__main__':
+    unittest.main()

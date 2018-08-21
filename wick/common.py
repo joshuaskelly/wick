@@ -1,5 +1,6 @@
 import os
 import re
+import struct
 
 from collections import namedtuple
 
@@ -14,6 +15,40 @@ def _expand_type(symbol):
         t = f'{t}[{symbol.dimension.value}]'
 
     return t
+
+
+def _get_type(symbol):
+    return symbol.type.value.split('[')[0]
+
+
+def _get_length(symbol):
+    if hasattr(symbol, 'dimension'):
+        return int(symbol.dimension.value)
+
+    return 1
+
+
+def _get_size(symbol):
+    length = _get_length(symbol)
+    type = _get_type(symbol)
+    format_char = {
+        'char': 'c',
+        'signed char': 'b',
+        'unsigned char': 'B',
+        'unsigned short': 'H',
+        'int': 'i',
+        'unsigned int': 'I',
+        'long': 'l',
+        'unsigned long': 'L',
+        'long long': 'q',
+        'unsigned long long': 'Q',
+        'ssize_t': 'n',
+        'size_t': 'N',
+        'float': 'f',
+        'double': 'd'
+    }[type]
+
+    return length * struct.calcsize(f'<{format_char}')
 
 
 def _sanitize_comment(text):
@@ -84,6 +119,49 @@ def _get_comment(comments, symbol):
     return ''
 
 
+class DataMember:
+    def __init__(self,
+                 name,
+                 type,
+                 size,
+                 offset,
+                 length,
+                 description):
+
+        self.name = name
+        self.type = type
+        self.size = size
+        self.offset = offset
+        self.length = length
+        self.description = description
+
+    @property
+    def unpack(self):
+        if self.length == 1:
+            return [self]
+
+        elements = []
+        offset = self.offset
+        for i in range(self.length):
+            name = f'{self.name}_{i}'
+            type = self.type
+            size = self.size // self.length
+            length = 1
+            description = self.description
+
+            data_member = DataMember(name,
+                                     type,
+                                     size,
+                                     offset,
+                                     length,
+                                     description)
+
+            elements.append(data_member)
+            offset += size
+
+        return elements
+
+
 class Program:
     """
     Attributes:
@@ -110,7 +188,27 @@ class Program:
         for symbol in struct_symbols:
             # Only consider named symbols (variables)
             variable_symbols = [d for d in symbol.inner_scope.definitions.values() if d.arity == 'name']
-            properties = [Property(v.value, _expand_type(v), _get_comment(parse_tree.comments, v)) for v in variable_symbols]
+            #properties = [Property(v.value, _expand_type(v), _get_comment(parse_tree.comments, v)) for v in variable_symbols]
+
+            properties = []
+            offset = 0
+            for variable_symbol in variable_symbols:
+                name = variable_symbol.value
+                type = _get_type(variable_symbol)
+                size = _get_size(variable_symbol)
+                #offset = offset
+                length = _get_length(variable_symbol)
+                description = _get_comment(parse_tree.comments, variable_symbol)
+
+                data_member = DataMember(name,
+                                         type,
+                                         size,
+                                         offset,
+                                         length,
+                                         description)
+
+                properties.append(data_member)
+                offset += size
 
             struct = Struct(
                 name=symbol.value,

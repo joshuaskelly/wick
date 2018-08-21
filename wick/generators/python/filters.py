@@ -54,7 +54,7 @@ def format_string(properties):
                 'double': 'd'
             }[type]
 
-        result += format
+        result += format * prop.length
 
     return simplify_format_string(result)
 
