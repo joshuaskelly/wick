@@ -22,12 +22,12 @@ class {{ struct.name }}:
     {%- for property in struct.properties %}
     {%- set outerloop = loop %}
     {%- for expanded_property in property.unpack %}
-                 {{ expanded_property.name }}{{ "," if not loop.last or not outerloop.last -}}
+                 {{ expanded_property.name }}{{ ',' if not loop.last or not outerloop.last -}}
     {% endfor %}
     {%- endfor %}):
     {%- for property in struct.properties %}
         self.{{ property.name }} = {% for expanded_property in property.unpack %}
-            {{- expanded_property.name -}}{{ ", " if not loop.last -}}
+            {{- expanded_property.name -}}{% if property.type == 'char' and property.length > 1 %}.split(b'\x00')[0].decode('ascii') if type({{ property.name }}) is bytes else name{% endif %}{{ ', ' if not loop.last -}}
         {% endfor %}
     {%- endfor %}
 
@@ -35,7 +35,7 @@ class {{ struct.name }}:
     def write(cls, file, {{ struct.name|lower }}):
         {{ struct.name|lower }}_data = struct.pack(cls.format,
         {%- for property in struct.properties %}
-                            {{ struct.name|spaces }}{{ '*' if property.length > 1 and property.type != 'char' }}{{ struct.name|lower }}.{{ property.name }}{{ ',' if not loop.last -}}
+                            {{ struct.name|spaces }}{{ '*' if property.length > 1 and property.type != 'char' }}{{ struct.name|lower }}.{{ property.name }}{{ ".encode('ascii')" if property.type == 'char' and property.length > 1 }}{{ ',' if not loop.last -}}
         {% endfor %})
 
         file.write({{ struct.name|lower }}_data)

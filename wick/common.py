@@ -140,6 +140,9 @@ class DataMember:
         if self.length == 1:
             return [self]
 
+        if self.type == 'char':
+            return [self]
+
         elements = []
         offset = self.offset
         for i in range(self.length):

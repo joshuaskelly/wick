@@ -32,9 +32,9 @@ def format_string(properties):
     for prop in properties:
         type = prop.type
 
-        if type.startswith('string'):
-            dimension = type[6:]
-            format = f'{dimension}s'
+        if type == 'char' and prop.length > 1:
+            format = f'{prop.length}s'
+            result += format
 
         else:
             format = {
@@ -54,7 +54,7 @@ def format_string(properties):
                 'double': 'd'
             }[type]
 
-        result += format * prop.length
+            result += format * prop.length
 
     return simplify_format_string(result)
 
