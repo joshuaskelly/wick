@@ -26,10 +26,10 @@ def spaces(text):
     return ' ' * len(text)
 
 
-def format_string(properties):
+def format_string(members):
     result = ''
 
-    for prop in properties:
+    for prop in members:
         type = prop.type
 
         if type == 'char' and prop.length > 1:

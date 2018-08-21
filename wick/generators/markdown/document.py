@@ -4,15 +4,15 @@ from . import common
 from . import elements
 
 
-class PropertyTable(elements.Table):
-    def __init__(self, properties):
+class DataMemberTable(elements.Table):
+    def __init__(self, members):
         super().__init__(('Offset', 'Size', 'Type', 'Description', 'Notes'))
 
-        total_bytes = sum([p.size for p in properties])
+        total_bytes = sum([p.size for p in members])
         hex_width = max(4, len(hex(total_bytes)))
         current_bytes = 0
 
-        for prop in properties:
+        for prop in members:
             offset = common.to_hex(prop.offset, hex_width)
             size = prop.size
             type = common.get_type_string(prop)
@@ -41,16 +41,16 @@ class Document:
         return '\n'.join([str(e) for e in self._elements])
 
 
-def generate_section(s):
+def generate_section(struct):
     doc = Document()
-    doc.add(elements.H2(s.name))
+    doc.add(elements.H2(struct.name))
 
-    if s.description:
-        doc.add(elements.PlainText(s.description))
+    if struct.description:
+        doc.add(elements.PlainText(struct.description))
 
-    if s.properties:
+    if struct.members:
         doc.add(elements.BlankLine())
-        doc.add(PropertyTable(s.properties))
+        doc.add(DataMemberTable(struct.members))
 
     return doc
 

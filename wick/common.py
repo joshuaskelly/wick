@@ -2,11 +2,6 @@ import os
 import re
 import struct
 
-from collections import namedtuple
-
-Property = namedtuple('Property', ['name', 'type', 'description'])
-Struct = namedtuple('Struct', ['name', 'description', 'properties'])
-
 
 def _expand_type(symbol):
     t = symbol.type.value
@@ -119,6 +114,17 @@ def _get_comment(comments, symbol):
     return ''
 
 
+class Struct:
+    def __init__(self,
+                 name,
+                 description,
+                 members):
+
+        self.name = name
+        self.description = description
+        self.members = members
+
+
 class DataMember:
     def __init__(self,
                  name,
@@ -191,15 +197,13 @@ class Program:
         for symbol in struct_symbols:
             # Only consider named symbols (variables)
             variable_symbols = [d for d in symbol.inner_scope.definitions.values() if d.arity == 'name']
-            #properties = [Property(v.value, _expand_type(v), _get_comment(parse_tree.comments, v)) for v in variable_symbols]
 
-            properties = []
+            members = []
             offset = 0
             for variable_symbol in variable_symbols:
                 name = variable_symbol.value
                 type = _get_type(variable_symbol)
                 size = _get_size(variable_symbol)
-                #offset = offset
                 length = _get_length(variable_symbol)
                 description = _get_comment(parse_tree.comments, variable_symbol)
 
@@ -210,13 +214,13 @@ class Program:
                                          length,
                                          description)
 
-                properties.append(data_member)
+                members.append(data_member)
                 offset += size
 
             struct = Struct(
                 name=symbol.value,
                 description=_get_comment(parse_tree.comments, symbol),
-                properties=properties
+                members=members
             )
 
             self.structs.append(struct)
