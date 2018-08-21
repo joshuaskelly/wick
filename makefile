@@ -8,8 +8,14 @@ uninstall:
 
 reinstall: uninstall install
 
+publish:
+	python setup.py sdist upload
+
 test:
 	python -m unittest discover -s tests
 
 clean:
 	find . -name "*.pyc" -delete
+	rm -rf build
+	rm -rf dist
+	rm -rf *.egg-info

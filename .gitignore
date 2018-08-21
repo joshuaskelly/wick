@@ -5,6 +5,11 @@
 /vs
 *.pyproj
 
+# Ignore PyPi artifacts
+/dist
+/build
+*.egg-info
+
 # Ignore OS artifacts
 .DS_Store
 
