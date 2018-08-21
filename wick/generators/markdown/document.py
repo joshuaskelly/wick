@@ -8,14 +8,14 @@ class PropertyTable(elements.Table):
     def __init__(self, properties):
         super().__init__(('Offset', 'Size', 'Type', 'Description', 'Notes'))
 
-        total_bytes = sum([common.get_size(p.type) for p in properties])
+        total_bytes = sum([p.size for p in properties])
         hex_width = max(4, len(hex(total_bytes)))
         current_bytes = 0
 
         for prop in properties:
-            offset = common.to_hex(current_bytes, hex_width)
-            size = common.get_size(prop.type)
-            type = prop.type
+            offset = common.to_hex(prop.offset, hex_width)
+            size = prop.size
+            type = common.get_type_string(prop)
             description = prop.name
             note = prop.description
 
