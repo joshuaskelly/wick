@@ -1,4 +1,4 @@
-# [![wick](.media/logo.svg)](https://github.com/JoshuaSkelly/wick)
+# [![wick](https://raw.githubusercontent.com/joshuaskelly/wick/master/.media/logo.svg?sanitize=true)](https://github.com/JoshuaSkelly/wick)
 
 # wick
 
