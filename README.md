@@ -2,7 +2,7 @@
 
 # wick
 
-[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)]()
+[![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)]() [![PyPI version](https://badge.fury.io/py/wick.svg)](https://pypi.python.org/pypi/wick)
 
 wick is a Python command line tool that generates file I/O source code for working with binary data.
 
