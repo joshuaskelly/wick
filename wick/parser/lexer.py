@@ -170,7 +170,7 @@ def new_lexer(program: str) -> Lexer:
     lexer.add_rule('[0-9]+', process_lexeme('number'))
 
     # Types
-    lexer.add_rule('\\b(char|unsigned char|bool|short|unsigned short|int|unsigned int|long long|unsigned long long|long|unsigned long|float|double)\\b', process_lexeme('type'))
+    lexer.add_rule('\\b(char|signed char|unsigned char|bool|short|unsigned short|int|unsigned int|long long|unsigned long long|long|unsigned long|float|double)\\b', process_lexeme('type'))
 
     # Names
     lexer.add_rule('[A-Za-z_]+[A-Za-z0-9_]*', process_lexeme('name'))

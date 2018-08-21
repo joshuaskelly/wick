@@ -54,6 +54,22 @@ class TestParser(unittest.TestCase):
         self.assertEqual(symbol.type.value, 'char', 'Type should be "char"')
         self.assertRangesEqual(symbol.range, Range((0, 21), (0, 22)))
 
+    def test_single_signed_char_member(self):
+        source_text = 'struct single { signed char x; };'
+        parse_tree = parse(source_text)
+
+        self.assertFalse(parse_tree.errors, 'Errors during parsing')
+
+        symbol = self.get_symbol(parse_tree.scope, 'single')
+        self.assertEqual(symbol.value, 'single', 'Value should be "single"')
+        self.assertEqual(symbol.type.value, 'struct', 'Type should be "struct"')
+        self.assertIsNotNone(symbol.inner_scope, 'Inner scope should not be None')
+
+        symbol = self.get_symbol(symbol.inner_scope, 'x')
+        self.assertEqual(symbol.value, 'x', 'Value should be "x"')
+        self.assertEqual(symbol.type.value, 'signed char', 'Type should be "signed char"')
+        self.assertRangesEqual(symbol.range, Range((0, 28), (0, 29)))
+
     def test_single_unsigned_char_member(self):
         source_text = 'struct single { unsigned char x; };'
         parse_tree = parse(source_text)

@@ -83,12 +83,16 @@ class TestLexer(unittest.TestCase):
         self.assertEqual(token.value, '12345', 'Value should be 12345')
 
     def test_type(self):
-        program = 'char unsigned char bool short unsigned short int unsigned int long unsigned long float long long unsigned long long double'
+        program = 'char signed char unsigned char bool short unsigned short int unsigned int long unsigned long float long long unsigned long long double'
         lexer = new_lexer(program)
 
         token = lexer.lex()
         self.assertEqual(token.type, 'type', 'Type should be type')
         self.assertEqual(token.value, 'char', 'Value should be "char"')
+
+        token = lexer.lex()
+        self.assertEqual(token.type, 'type', 'Type should be type')
+        self.assertEqual(token.value, 'signed char', 'Value should be "signed char"')
 
         token = lexer.lex()
         self.assertEqual(token.type, 'type', 'Type should be type')

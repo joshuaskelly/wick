@@ -639,6 +639,7 @@ def variable_std(self: Symbol):
 
 
 Define.statement('char', variable_std)
+Define.statement('signed char', variable_std)
 Define.statement('unsigned char', variable_std)
 Define.statement('bool', variable_std)
 Define.statement('short', variable_std)
