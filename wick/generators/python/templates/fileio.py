@@ -1,4 +1,5 @@
 import struct
+
 {% for struct in program.structs %}
 class {{ struct.name }}:
     """{{ struct.description|indent }}
@@ -27,7 +28,7 @@ class {{ struct.name }}:
     {%- endfor %}):
     {%- for property in struct.members %}
         self.{{ property.name }} = {% for expanded_property in property.unpack %}
-            {{- expanded_property.name -}}{% if property.type == 'char' and property.length > 1 %}.split(b'\x00')[0].decode('ascii') if type({{ property.name }}) is bytes else name{% endif %}{{ ', ' if not loop.last -}}
+            {{- expanded_property.name -}}{% if property.type == 'char' and property.length > 1 %}.split(b'\x00')[0].decode('ascii') if type({{ property.name }}) is bytes else {{property.name}}{% endif %}{{ ', ' if not loop.last -}}
         {% endfor %}
     {%- endfor %}
 
@@ -46,4 +47,5 @@ class {{ struct.name }}:
         {{ struct.name|lower }}_struct = struct.unpack(cls.format, {{ struct.name|lower }}_data)
 
         return {{ struct.name }}(*{{ struct.name|lower }}_struct)
+{{- '\n' if not loop.last}}
 {% endfor %}

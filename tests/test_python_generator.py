@@ -233,8 +233,8 @@ struct A {
         self.assertEqual(actual, expected)
 
         # Verify constructor body
-        actual = re.search("self.\w+ = ((?:[\w]+, )*(?:[\w]+))", source_text).group(1)
-        expected = 'c'
+        actual = re.search("self.(\w)+ = (\w).split\(b'.x00'\)\[0\].decode\('ascii'\) if type\((\w+)\) is bytes else (\w+)", source_text).groups()
+        expected = 'c', 'c', 'c', 'c'
 
         self.assertEqual(actual, expected)
 
