@@ -13,7 +13,7 @@ Options:
     --language=<lang>  Desired source code language [default: python]
     --template=<templ> Jinja2 template to use to generate souce. Note: If
                        provided the language option will be ignored.
-    --outdir=<dir>     Directory to generate project. [default: './out']
+    --outdir=<dir>     Directory to generate project. [default: ./out]
 """
 
 import os
@@ -36,6 +36,9 @@ def main():
     language = arguments['--language']
     template = arguments['--template']
     outdir = resolve_path(arguments['--outdir'])
+
+    if not os.path.exists(outdir):
+        os.makedirs(outdir)
 
     if template:
         template = os.path.abspath(os.path.expanduser(template))

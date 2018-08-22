@@ -124,6 +124,7 @@ class Struct:
         self.name = name
         self.description = description
         self.members = members
+        self.size = sum([m.size for m in members])
 
 
 class DataMember:

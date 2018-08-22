@@ -30,7 +30,6 @@ def generate(program):
 
 
 def generate_project(program, out_directory):
-    os.makedirs(out_directory)
     doc_path = os.path.join(out_directory, f'{program.name}.md')
 
     with open(doc_path, 'w') as file:
