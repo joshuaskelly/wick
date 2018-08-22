@@ -3,7 +3,7 @@
 """Wick
 
 Usage:
-    wick <source> [--language=<lang>] [--template=<templ>]
+    wick <source> [--language=<lang>] [--template=<templ>] [--outdir=<dir>]
     wick -h | --help
     wick --version
 
@@ -13,6 +13,7 @@ Options:
     --language=<lang>  Desired source code language [default: python]
     --template=<templ> Jinja2 template to use to generate souce. Note: If
                        provided the language option will be ignored.
+    --outdir=<dir>     Directory to generate project. [default: './out']
 """
 
 import os
@@ -23,13 +24,18 @@ from docopt import docopt
 import wick
 
 
+def resolve_path(path):
+    return os.path.normpath(os.path.abspath(os.path.expanduser(path)))
+
+
 def main():
     """Main CLI entrypoint"""
 
     arguments = docopt(__doc__, version=f'wick {wick.__version__}')
-    source_file = os.path.abspath(os.path.expanduser(arguments['<source>']))
+    source_file = resolve_path(arguments['<source>'])
     language = arguments['--language']
     template = arguments['--template']
+    outdir = resolve_path(arguments['--outdir'])
 
     if template:
         template = os.path.abspath(os.path.expanduser(template))
@@ -42,8 +48,7 @@ def main():
         template = None
 
     with open(source_file) as file:
-        result = wick.generate(file.read(), uri=source_file, language=language, template=template)
-        print(result)
+        wick.generate_project(file.read(), outdir, uri=source_file, language=language, template=template)
 
     sys.exit(0)
 

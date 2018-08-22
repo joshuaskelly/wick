@@ -1,14 +1,19 @@
+import os
+
 from collections import namedtuple
 
 from . import document
 
 
-Generator = namedtuple('Generator', ['generate'])
+Generator = namedtuple('Generator', ['generate', 'generate_project'])
 
 
 def get_generator(language):
     if language.lower() == 'markdown':
-        return Generator(generate=generate)
+        return Generator(
+            generate=generate,
+            generate_project=generate_project
+        )
 
 
 def generate(program):
@@ -22,3 +27,11 @@ def generate(program):
     """
 
     return document.generate_source(program)
+
+
+def generate_project(program, out_directory):
+    os.makedirs(out_directory)
+    doc_path = os.path.join(out_directory, f'{program.name}.md')
+
+    with open(doc_path, 'w') as file:
+        file.write(generate(program))

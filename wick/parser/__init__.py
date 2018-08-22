@@ -1,3 +1,5 @@
+import sys
+
 from wick.common import Program
 from . import parser
 
@@ -15,6 +17,11 @@ def parse(uri, source):
     """
 
     parse_tree = parser.parse(source)
+
+    # Report errors
+    for error in parse_tree.errors:
+        print(error, file=sys.stderr)
+
     program = Program(uri, parse_tree)
 
     return program

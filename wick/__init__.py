@@ -29,3 +29,13 @@ def generate(source, uri='', language='python', template=None):
         generator = generators.factory.from_language(language)
 
     return generator.generate(parser.parse(uri, source))
+
+
+def generate_project(source, outdir, uri='', language='python', template=None):
+    if template:
+        generator = generators.factory.from_template(template)
+
+    else:
+        generator = generators.factory.from_language(language)
+
+    return generator.generate_project(parser.parse(uri, source), outdir)
