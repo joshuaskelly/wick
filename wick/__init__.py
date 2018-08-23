@@ -31,9 +31,9 @@ def generate(source, uri='', language='python', template=None):
     return generator.generate(parser.parse(uri, source))
 
 
-def generate_project(source, outdir, uri='', language='python', template=None):
+def generate_project(source, language, outdir, uri='', template=None, filters=None):
     if template:
-        generator = generators.factory.from_template(template)
+        generator = generators.factory.from_template(template, filters)
 
     else:
         generator = generators.factory.from_language(language)

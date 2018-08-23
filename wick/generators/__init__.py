@@ -1,8 +1,12 @@
-from . import python
+import sys
+
+from . import csharp
 from . import markdown
+from . import python
 from . import template
 
 _language_modules = [
+    csharp,
     markdown,
     python
 ]
@@ -26,6 +30,8 @@ class factory:
             if generator:
                 return generator
 
+        print(f'Unsupported languge: "{language}"', file=sys.stderr)
+
     @staticmethod
-    def from_template(template_string):
-        return template.get_generator(template_string)
+    def from_template(template_string, filters):
+        return template.get_generator(template_string, filters)

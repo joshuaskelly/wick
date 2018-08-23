@@ -56,7 +56,8 @@ def generate_project(program, out_directory):
     import os
 
     test_dir = os.path.join(out_directory, 'tests')
-    os.makedirs(test_dir)
+    if not os.path.exists(test_dir):
+        os.makedirs(test_dir)
 
     module_path = os.path.join(out_directory, f'{program.name}.py')
     test_path = os.path.join(test_dir, f'test_{program.name}.py')

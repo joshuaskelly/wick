@@ -3,17 +3,15 @@
 """Wick
 
 Usage:
-    wick <source> [--language=<lang>] [--template=<templ>] [--outdir=<dir>]
+    wick <source> <language> [--directory=<dir>]
+    wick template <source> <template> [<filters>]
     wick -h | --help
     wick --version
 
 Options:
-    -h --help          Show this screen.
-    --version          Show version.
-    --language=<lang>  Desired source code language [default: python]
-    --template=<templ> Jinja2 template to use to generate souce. Note: If
-                       provided the language option will be ignored.
-    --outdir=<dir>     Directory to generate project. [default: ./out]
+    -h --help             Show this screen.
+    --version             Show version.
+    -d --directory=<dir>  Directory to generate project. [default: ./out]
 """
 
 import os
@@ -33,25 +31,28 @@ def main():
 
     arguments = docopt(__doc__, version=f'wick {wick.__version__}')
     source_file = resolve_path(arguments['<source>'])
-    language = arguments['--language']
-    template = arguments['--template']
-    outdir = resolve_path(arguments['--outdir'])
+    language = arguments['<language>']
+    outdir = resolve_path(arguments['--directory'])
+    template = None
+    filters = None
 
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
-    if template:
+    if arguments['template']:
+        template = resolve_path(arguments['<template>'])
         template = os.path.abspath(os.path.expanduser(template))
 
         if os.path.exists(template):
             with open(template) as file:
                 template = file.read()
 
-    else:
-        template = None
+        filters = resolve_path(arguments['<filters>'])
+        if not os.path.exists(filters):
+            filters = None
 
     with open(source_file) as file:
-        wick.generate_project(file.read(), outdir, uri=source_file, language=language, template=template)
+        wick.generate_project(file.read(), language, outdir=outdir, uri=source_file, template=template, filters=filters)
 
     sys.exit(0)
 
