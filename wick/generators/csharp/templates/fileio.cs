@@ -8,63 +8,63 @@ namespace {{ program.name|pascalcase }} {
     // {{ struct.description }}
     public class {{ struct.name|pascalcase }} {
         {#- Class members #}
-        {% for property in struct.members -%}
-        public {{ property|csharptype }} {{ property.name }};
+        {% for member in struct.members -%}
+        public {{ member|csharptype }} {{ member.name }};
         {% endfor %}
         public const int Size = {{ struct.size }};
 
         public {{ struct.name|pascalcase }} (
-            {%- for property in struct.members -%}
-                {{ property|csharptype }} {{ property.name }}{{ ", " if not loop.last}}
+            {%- for member in struct.members -%}
+                {{ member|csharptype }} {{ member.name }}{{ ", " if not loop.last}}
             {%- endfor -%}) {
-            {%- for property in struct.members %}
-            this.{{ property.name }} = {{ property.name }};
+            {%- for member in struct.members %}
+            this.{{ member.name }} = {{ member.name }};
             {%- endfor %}
         }
 
         public static {{ struct.name|pascalcase }} Read(BinaryReader reader) {
             {#- Read data -#}
-            {%- for property in struct.members %}
-            {{ property|csharptype }} {{ property.name }} = {{ "" }}
-            {%- if property.length == 1 and property.type -%}
-            reader.{{- property|readermethod }}();
+            {%- for member in struct.members %}
+            {{ member|csharptype }} {{ member.name }} = {{ "" }}
+            {%- if member.length == 1 and member.type -%}
+            reader.{{- member|readermethod }}();
             {%- endif -%}
             {#- Read arrays -#}
-            {%- if property.length > 1 and property.type != 'char' -%}
-            new {{ property|csharptype(True) }};
-            for (int index = 0; index < {{ property.length }}; index++) {
-                {{ property.name }}[index] = reader.{{ property|readermethod }}();
+            {%- if member.length > 1 and member.type != 'char' -%}
+            new {{ member|csharptype(True) }};
+            for (int index = 0; index < {{ member.length }}; index++) {
+                {{ member.name }}[index] = reader.{{ member|readermethod }}();
             }
             {%- endif -%}
             {#- Read strings -#}
-            {% if property.length > 2 and property.type == 'char' -%}
-            Encoding.ASCII.GetString(reader.ReadBytes({{ property.size }})).TrimEnd('\0');
+            {% if member.length > 2 and member.type == 'char' -%}
+            Encoding.ASCII.GetString(reader.ReadBytes({{ member.size }})).TrimEnd('\0');
             {%- endif -%}
             {%- endfor %}
 
             {# Return new Object -#}
             return new {{ struct.name|pascalcase }}(
             {#- Constructor Args -#}
-            {%- for property in struct.members -%}
-            {{ property.name }}{{ ", " if not loop.last}}
+            {%- for member in struct.members -%}
+            {{ member.name }}{{ ", " if not loop.last}}
             {%- endfor %});
         }
 
         public static void Write(BinaryWriter writer, {{ struct.name|pascalcase }} {{ struct.name|lower }}) {
-            {% for property in struct.members -%}
-            {% if property.type == 'char' and property.length > 1 -%}
-            writer.Write(Encoding.ASCII.GetBytes({{ struct.name|lower }}.{{ property.name }}.Substring(0, Math.Min({{ property.length }}, {{ struct.name|lower }}.{{ property.name }}.Length)).PadRight({{ property.length }}, '\0')));
+            {%- for member in struct.members -%}
+            {% if member.type == 'char' and member.length > 1 -%}
+            writer.Write(Encoding.ASCII.GetBytes({{ struct.name|lower }}.{{ member.name }}.Substring(0, Math.Min({{ member.length }}, {{ struct.name|lower }}.{{ member.name }}.Length)).PadRight({{ member.length }}, '\0')));
             {#- Write array data -#}
-            {%- elif property.length > 1 -%}
+            {%- elif member.length > 1 -%}
             {%- if not loop.first -%}
             {{ '' }}
             {%- endif %}
-            for (int index = 0; index < {{ property.length }}; index++) {
-                writer.Write({{ struct.name|lower }}.{{ property.name }}[index]);
+            for (int index = 0; index < {{ member.length }}; index++) {
+                writer.Write({{ struct.name|lower }}.{{ member.name }}[index]);
             }
             {#- Write data -#}
             {% else %}
-            writer.Write({{ struct.name|lower }}.{{ property.name }});
+            writer.Write({{ struct.name|lower }}.{{ member.name }});
             {%- endif %}
             {%- endfor %}
         }

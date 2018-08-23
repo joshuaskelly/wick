@@ -26,7 +26,6 @@ def integral_type(member):
 
 
 def csharp_type(member, show_length=False):
-
     if member.type == 'char' and member.length > 1:
         return 'string'
 
