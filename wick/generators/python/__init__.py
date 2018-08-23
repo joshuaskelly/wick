@@ -11,13 +11,13 @@ Generator = namedtuple('Generator', ['generate', 'generate_project'])
 def get_generator(language):
     if language.lower() == 'python':
         return Generator(
-            generate=get_generator_for_template('fileio.py'),
+            generate=get_generator_for_template('main.jinja2'),
             generate_project=generate_project
         )
 
     if language.lower() == 'python-test':
         return Generator(
-            generate=get_generator_for_template('test.py'),
+            generate=get_generator_for_template('test.jinja2'),
             generate_project=generate_project
         )
 
@@ -73,10 +73,10 @@ def generate_project(program, out_directory):
     env.filters['testdata'] = filters.test_data
 
     with open(module_path, 'w') as file:
-        template = env.get_template('fileio.py')
+        template = env.get_template('main.jinja2')
         file.write(template.render(program=program))
 
     with open(test_path, 'w') as file:
-        template = env.get_template('test.py')
+        template = env.get_template('test.jinja2')
         file.write(template.render(program=program))
 

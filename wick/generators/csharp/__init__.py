@@ -60,5 +60,5 @@ def generate_project(program, out_directory):
     env.filters = {**env.filters, **filters.filters}
 
     with open(module_path, 'w') as file:
-        template = env.get_template('fileio.cs')
+        template = env.get_template('main.jinja2')
         file.write(template.render(program=program))
