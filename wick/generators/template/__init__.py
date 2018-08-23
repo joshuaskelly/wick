@@ -2,16 +2,13 @@ import os
 
 from collections import namedtuple
 
-from jinja2 import Environment, Template, PackageLoader
+from jinja2 import Environment
 
 
-Generator = namedtuple('Generator', ['generate', 'generate_project'])
+Generator = namedtuple('Generator', ['generate_project'])
 
 
 def get_generator(template_string, filters=None):
-    def generate(program):
-        return Template(template_string).render(program=program)
-
     def generate_project(program, out_directory):
         env = Environment()
 
@@ -33,6 +30,5 @@ def get_generator(template_string, filters=None):
             file.write(template.render(program=program))
 
     return Generator(
-        generate=generate,
         generate_project=generate_project
     )
