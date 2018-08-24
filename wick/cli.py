@@ -33,11 +33,6 @@ def main():
     source_file = resolve_path(arguments['<source>'])
     language = arguments['<language>']
     outdir = resolve_path(arguments['--directory'])
-    template = None
-    filters = None
-
-    if not os.path.exists(outdir):
-        os.makedirs(outdir)
 
     if arguments['template']:
         template = resolve_path(arguments['<template>'])
@@ -51,8 +46,12 @@ def main():
         if not os.path.exists(filters):
             filters = None
 
-    with open(source_file) as file:
-        wick.generate_project(file.read(), language, outdir=outdir, uri=source_file, template=template, filters=filters)
+        with open(source_file) as file:
+            wick.generate_project_from_template(file.read(), outdir, source_file, template, filters=filters)
+
+    else:
+        with open(source_file) as file:
+            wick.generate_project(file.read(), language, outdir, source_file)
 
     sys.exit(0)
 

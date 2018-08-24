@@ -8,8 +8,12 @@ from . import filters
 Generator = namedtuple('Generator', ['generate_project'])
 
 
+def is_valid_language(language):
+    return language.lower() in ['csharp', 'c#']
+
+
 def get_generator(language):
-    if language.lower() in ['csharp', 'c#']:
+    if is_valid_language(language):
         return Generator(
             generate_project=generate_project
         )

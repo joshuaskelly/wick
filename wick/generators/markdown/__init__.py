@@ -8,8 +8,12 @@ from . import document
 Generator = namedtuple('Generator', ['generate_project'])
 
 
+def is_valid_language(language):
+    return language.lower() in ['markdown']
+
+
 def get_generator(language):
-    if language.lower() == 'markdown':
+    if is_valid_language(language):
         return Generator(
             generate_project=generate_project
         )

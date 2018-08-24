@@ -19,8 +19,8 @@ def get_generator(template_string, filters=None):
             spec = importlib.util.spec_from_file_location(module, filters)
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
-
-            env.filters = {**env.filters, ** module.filters}
+            module_filters = module.filters if hasattr(module, 'filters') else {}
+            env.filters = {**env.filters, **module_filters}
 
         file_path = os.path.join(out_directory, program.name)
 
