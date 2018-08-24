@@ -1,5 +1,7 @@
 def pascal_case(text):
     """Returns text converted to PascalCase"""
+    if text.count('_') == 0:
+        return text
 
     s1 = text.split('_')
     return ''.join([s.lower().capitalize() for s in s1])
@@ -57,8 +59,72 @@ def reader_method(member):
     return method
 
 
+def lines(text):
+    ls = text.split('\n')
+
+    if not ls:
+        return []
+
+    if ls[0].strip() == '':
+        ls = ls[1:]
+    
+    if not ls:
+        return []
+
+    if ls[-1].strip() == '':
+        ls = ls[:-1]
+
+    return ls
+
+
+def leading_spaces(text):
+    return len(text) - len(text.lstrip())
+
+
+def remove_miniumum_whitespace(lines):
+    try:
+        minimum_whitespace = min([leading_spaces(l) for l in lines])
+        return [l[minimum_whitespace:] for l in lines]
+    
+    except ValueError:
+        return []
+
+
+def xml_comment(text):
+    ls = lines(text)
+    ls = remove_miniumum_whitespace(ls)
+    return '\n'.join([f'/// {l}' for l in ls])
+
+def comment(text):
+    if text.count('\n') == 0:
+        return single_line_comment(text)
+
+    return multi_line_comment(text)
+
+
+def single_line_comment(text):
+    ls = lines(text)
+    ls = remove_miniumum_whitespace(ls)
+
+    return '\n'.join([f'// {l}' for l in ls])
+
+
+def multi_line_comment(text):
+    ls = lines(text)
+    ls = remove_miniumum_whitespace(ls)
+    ls = [f' * {l}' for l in ls]
+    ls.insert(0, '/*')
+    ls.append(' */')
+
+    return '\n'.join(ls)
+
+
 filters = {
     'pascalcase': pascal_case,
     'csharptype': csharp_type,
-    'readermethod': reader_method
+    'readermethod': reader_method,
+    'comment': comment,
+    'singlelinecomment': single_line_comment,
+    'multilinecomment': multi_line_comment,
+    'xmlcomment': xml_comment
 }

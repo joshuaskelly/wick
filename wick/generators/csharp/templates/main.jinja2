@@ -5,12 +5,18 @@ using System.Text;
 namespace {{ program.name|pascalcase }} {
     {% for struct in program.structs %}
     {#- Class statement -#}
-    // {{ struct.description }}
+    {% if struct.description %}
+    {{- struct.description|xmlcomment|indent(4) }}
+    {% endif -%}
     public class {{ struct.name|pascalcase }} {
         {#- Class members #}
-        {% for member in struct.members -%}
+        {%- for member in struct.members %}
+        {% if member.description %}
+        {{- member.description|comment|indent(8) }}
+        {% endif -%}
         public {{ member|csharptype }} {{ member.name }};
-        {% endfor %}
+        {%- endfor %}
+
         public const int Size = {{ struct.size }};
 
         public {{ struct.name|pascalcase }} (
@@ -79,5 +85,6 @@ namespace {{ program.name|pascalcase }} {
             {{ struct.name|pascalcase }}.Write(writer, {{ struct.name|lower }});
         }
     }
+    {{-'\n\n    ' if not loop.last}}
     {%- endfor %}
 }

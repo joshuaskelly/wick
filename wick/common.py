@@ -60,16 +60,13 @@ def _sanitize_comment(text):
     is_multiline_comment = text.startswith('/*')
 
     # Remove C style comments
-    text = re.sub('(\/\*|\*\/|\/\/)', '', text)
+    text = re.sub('[ \t]*(\/\*|\*\/|\/\/)', '', text)
 
     # Remove leading asterisks in multiline comments.
     if is_multiline_comment:
         lines = text.split('\n')
         lines = [line.lstrip(' *') for line in lines]
         text = '\n'.join(lines)
-
-    # Clean up whitespace
-    text = text.strip()
 
     return text
 
