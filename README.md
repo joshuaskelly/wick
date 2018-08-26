@@ -11,6 +11,7 @@ I was working on a project that involved reverse engineering file formats and I 
 
 ## Supported Target Languages
 - C#
+- JavaScript
 - Python
 
 ## Installation
