@@ -1,0 +1,97 @@
+{% for struct in program.structs -%}
+/**
+ {%- if struct.description %}
+{{ struct.description|prependlines(' * ') }}
+ {%- endif %}
+ {%- if struct.members %}
+ {%- if struct.description %}
+ *
+ {%- endif %}
+ {%- for member in struct.members %}
+ * @property {{ '{' }}{{ member|javascripttype }}{{ '}' }} {{ member.name }} {{ member.description }}
+ {%- endfor -%}
+ {% endif %}
+ */
+class {{ struct.name }} {
+    constructor(
+        {%- for member in struct.members %}
+        {{- member.name }}{{ ", " if not loop.last }}
+        {%- endfor -%}
+    ) {
+        {%- for member in struct.members %}
+        this.{{ member.name }} = {{ member.name }};
+        {%- endfor %}
+    }
+
+    /**
+     * Creates a {{ struct.name }} object from the given DataView
+     *
+     * @param {DataView} dataView
+     *
+     * @returns {{ '{' }}{{ struct.name }}{{ '}' }}
+     */
+    static Read(dataView) {
+        {% for member in struct.members -%}
+        {% if member.length == 1 %}
+        {#- Read data -#}
+        let {{ member.name }} = dataView.{{ member|getmethod }}({{ member.offset }});
+        {% elif member.type == 'char' %}
+        {#- Read string data -#}
+        let {{ member.name }} = "";
+        for (var i = 0; i < {{ member.length }}; i++) {
+            let offset = {{ member.offset }} + (i * {{ member.size // member.length }});
+            {{ member.name }} += String.fromCharCode(dataView.getUint8(offset));
+        }
+        {{ member.name }} = {{ member.name }}.substr(0, {{ member.name }}.indexOf('\0'));
+        {% else %}
+        {#- Read array data -#}
+        let {{ member.name }} = [];
+        for (var i=0; i < {{ member.length }}; i++) {
+            let offset = {{ member.offset }} + (i * {{ member.size // member.length }});
+            {{ member.name }}.push(dataView.{{ member|getmethod }}(offset));
+        }
+        {% endif %}
+        {%- endfor %}
+        return new {{ struct.name }}(
+        {%- for member in struct.members %}
+        {{- member.name }}{{ ", " if not loop.last }}
+        {%- endfor -%}
+        );
+    }
+
+    /**
+     * Writes {{ struct.name }} data to the given DataView
+     *
+     * @param {DataView} dataView
+     * @param {{ '{' }}{{ struct.name }}{{ '}' }} {{ struct.name|lower }}
+     */
+    static Write(dataView, {{ struct.name|lower }}) {
+        {%- if struct.members -%}
+        {% for member in struct.members %}
+        {% if member.length == 1 %}
+        {#- Read data -#}
+        dataView.{{ member|setmethod }}({{ member.offset }}, {{ struct.name|lower }}.{{ member.name }});
+        {%- elif member.type == 'char' %}
+        {#- Read string data -#}
+        for (var i = 0; i < {{ member.length }}; i++) {
+            let offset = {{ member.offset }} + (i * {{ member.size // member.length }});
+            let char = {{ struct.name|lower }}.{{ member.name }}.charCodeAt(i) || 0;
+            dataView.setUint8(offset, char);
+        }
+        {%- else %}
+        {#- Read array data -#}
+        for (var i=0; i < {{ member.length }}; i++) {
+            let offset = {{ member.offset }} + (i * {{ member.size // member.length }});
+            dataView.{{ member|setmethod }}(offset, {{ struct.name|lower }}.{{ member.name }}[i]);
+        }
+        {%- endif %}
+        {%- endfor -%}
+        {%- endif %}
+    }
+}
+
+{{ struct.name }}.size = {{ struct.size }};
+{%- if not loop.last%}
+{#- Ensure a single new line at end of file #}
+{% endif %}
+{% endfor %}
